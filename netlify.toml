@@ -1,6 +1,7 @@
 [build]
-  publish = "public"
-  functions = "netlify/functions"
+  base = "ekram-prices"
+  publish = "ekram-prices/public"
+  functions = "ekram-prices/netlify/functions"
 
 [functions]
   node_bundler = "esbuild"
