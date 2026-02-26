@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EKRAM Price Tracker | متابعة أسعار الإكرام</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌽</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green-deep: #0A1F1A;
+  --green-dark: #132F27;
+  --green-mid: #1A3C34;
+  --green-accent: #2D6B5A;
+  --gold: #D4A843;
+  --gold-light: #E8C76A;
+  --gold-dim: rgba(212,168,67,0.15);
+  --white: #F5F2EA;
+  --red: #E74C3C;
+  --red-dim: rgba(231,76,60,0.15);
+  --green-up: #27AE60;
+  --green-up-dim: rgba(39,174,96,0.15);
+  --gray: #8A9B95;
+  --text-primary: #F5F2EA;
+  --text-secondary: #A8B8B0;
+  --radius: 16px;
+  --radius-sm: 10px;
+  --shadow: 0 4px 24px rgba(0,0,0,0.3);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Cairo', sans-serif;
+  background: var(--green-deep);
+  color: var(--text-primary);
+  min-height: 100vh;
+}
+body::before {
+  content: '';
+  position: fixed; top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: radial-gradient(ellipse at 30% 20%, rgba(45,107,90,0.12) 0%, transparent 50%),
+              radial-gradient(ellipse at 70% 80%, rgba(212,168,67,0.06) 0%, transparent 50%);
+  animation: bgShift 20s ease-in-out infinite alternate;
+  z-index: 0; pointer-events: none;
+}
+@keyframes bgShift {
+  0% { transform: translate(0,0); }
+  100% { transform: translate(-5%,3%); }
+}
+
+/* HEADER */
+.header {
+  position: sticky; top:0; z-index:100;
+  background: rgba(10,31,26,0.88);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(212,168,67,0.15);
+  padding: 0 24px;
+}
+.header-inner {
+  max-width: 1400px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 68px;
+}
+.logo-section { display: flex; align-items: center; gap: 12px; }
+.logo-mark {
+  width: 42px; height: 42px;
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  border-radius: 11px;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 900; font-size: 17px; color: var(--green-deep);
+  box-shadow: 0 2px 12px rgba(212,168,67,0.3);
+}
+.logo-text h1 { font-size: 17px; font-weight: 800; color: var(--gold); letter-spacing: 1px; }
+.logo-text span { font-size: 11px; color: var(--text-secondary); }
+.header-actions { display: flex; align-items: center; gap: 10px; }
+.live-badge {
+  display: flex; align-items: center; gap: 5px;
+  background: var(--green-up-dim); color: var(--green-up);
+  padding: 5px 12px; border-radius: 20px;
+  font-size: 11px; font-weight: 700;
+}
+.live-dot {
+  width: 7px; height: 7px; background: var(--green-up);
+  border-radius: 50%; animation: pulse 1.5s infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.7)} }
+.btn-admin {
+  background: var(--gold); color: var(--green-deep); border: none;
+  padding: 7px 16px; border-radius: 10px;
+  font-family:'Cairo'; font-weight:700; font-size:13px;
+  cursor:pointer; transition: all .3s;
+}
+.btn-admin:hover { background: var(--gold-light); transform: translateY(-1px); }
+.refresh-btn {
+  background: rgba(255,255,255,0.06); color: var(--text-secondary); border: none;
+  padding: 7px 12px; border-radius: 10px;
+  font-family:'Cairo'; font-weight:600; font-size:12px;
+  cursor:pointer; transition: all .3s;
+}
+.refresh-btn:hover { background: rgba(255,255,255,0.1); }
+
+/* MAIN */
+.main {
+  position: relative; z-index:1;
+  max-width: 1400px; margin: 0 auto;
+  padding: 24px 24px 40px;
+}
+
+/* LOADING */
+.loading { text-align:center; padding:60px 20px; }
+.loading .spinner {
+  width:40px; height:40px; border: 3px solid rgba(212,168,67,0.2);
+  border-top-color: var(--gold); border-radius:50%;
+  animation: spin .8s linear infinite; margin: 0 auto 16px;
+}
+@keyframes spin { to{transform:rotate(360deg)} }
+
+/* TELEGRAM INFO */
+.telegram-info {
+  background: linear-gradient(135deg, #0088cc12, #0088cc06);
+  border: 1px solid rgba(0,136,204,0.15);
+  border-radius: var(--radius); padding: 16px 20px;
+  margin-bottom: 24px;
+  display: flex; align-items: center; gap: 14px;
+}
+.telegram-icon {
+  width:44px; height:44px; background:#0088cc; border-radius:12px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:22px; flex-shrink:0;
+}
+.telegram-text h4 { font-size:13px; font-weight:700; margin-bottom:2px; }
+.telegram-text p { font-size:11px; color:var(--text-secondary); line-height:1.6; }
+.telegram-text code {
+  background:rgba(0,136,204,0.15); padding:2px 5px; border-radius:4px;
+  font-family:'JetBrains Mono',monospace; font-size:10px; direction:ltr; color:#4FC3F7;
+}
+
+/* STATS */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px; margin-bottom: 24px;
+}
+.stat-card {
+  background: var(--green-dark);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: var(--radius); padding: 18px;
+  transition: all .3s;
+}
+.stat-card:hover { border-color: rgba(212,168,67,0.2); transform: translateY(-2px); }
+.stat-label { font-size:11px; color:var(--text-secondary); margin-bottom:6px; font-weight:600; }
+.stat-value { font-size:26px; font-weight:900; font-family:'JetBrains Mono',monospace; }
+.stat-value.gold { color:var(--gold); }
+.stat-value.green { color:var(--green-up); }
+.stat-value.red { color:var(--red); }
+.stat-sub { font-size:10px; color:var(--text-secondary); margin-top:3px; }
+
+/* PRICE CARDS */
+.section-title {
+  font-size:18px; font-weight:800; margin-bottom:16px;
+  display:flex; align-items:center; gap:8px;
+}
+.section-title::before {
+  content:''; width:3px; height:22px;
+  background:var(--gold); border-radius:2px;
+}
+.prices-grid {
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px,1fr));
+  gap:14px; margin-bottom:32px;
+}
+.price-card {
+  background: var(--green-dark);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: var(--radius); padding: 22px;
+  transition: all .4s cubic-bezier(.16,1,.3,1);
+  position: relative; overflow: hidden;
+}
+.price-card::before {
+  content:''; position:absolute; top:0; right:0;
+  width:3px; height:100%;
+  border-radius: 0 var(--radius) var(--radius) 0;
+}
+.price-card.up::before { background:var(--green-up); }
+.price-card.down::before { background:var(--red); }
+.price-card.stable::before { background:var(--gold); }
+.price-card:hover {
+  border-color: rgba(212,168,67,0.2);
+  transform: translateY(-2px); box-shadow: var(--shadow);
+}
+.card-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:14px; }
+.material-icon {
+  width:44px; height:44px; border-radius:12px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:22px; background:var(--gold-dim);
+}
+.material-info h3 { font-size:15px; font-weight:800; margin-bottom:1px; }
+.material-info .en-name { font-size:10px; color:var(--text-secondary); }
+.price-display { display:flex; align-items:baseline; gap:6px; margin-bottom:10px; }
+.price-main { font-family:'JetBrains Mono',monospace; font-size:30px; font-weight:700; }
+.price-unit { font-size:12px; color:var(--text-secondary); }
+.price-change {
+  display:inline-flex; align-items:center; gap:3px;
+  padding:3px 8px; border-radius:7px;
+  font-size:11px; font-weight:700;
+  font-family:'JetBrains Mono',monospace;
+}
+.price-change.up { background:var(--green-up-dim); color:var(--green-up); }
+.price-change.down { background:var(--red-dim); color:var(--red); }
+.price-change.stable { background:var(--gold-dim); color:var(--gold); }
+.card-footer {
+  display:flex; justify-content:space-between; align-items:center;
+  margin-top:14px; padding-top:10px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+.supplier-info { font-size:10px; color:var(--text-secondary); }
+.supplier-info strong { color:var(--text-primary); font-weight:600; }
+.update-time { font-size:9px; color:var(--gray); font-family:'JetBrains Mono',monospace; direction:ltr; }
+.prev-price { font-size:11px; color:var(--text-secondary); }
+.prev-price span { text-decoration:line-through; direction:ltr; display:inline-block; }
+
+/* HISTORY */
+.history-section {
+  background: var(--green-dark);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: var(--radius); padding: 20px;
+  overflow-x: auto;
+}
+.history-table { width:100%; border-collapse:collapse; font-size:12px; }
+.history-table th {
+  text-align:right; padding:10px 14px; font-weight:700;
+  color:var(--gold); font-size:11px;
+  border-bottom: 2px solid rgba(212,168,67,0.2);
+  white-space:nowrap;
+}
+.history-table td {
+  padding:10px 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  white-space:nowrap;
+}
+.history-table tr:hover td { background:rgba(255,255,255,0.02); }
+.mono { font-family:'JetBrains Mono',monospace; direction:ltr; text-align:right; }
+.badge { display:inline-block; padding:2px 7px; border-radius:5px; font-size:10px; font-weight:700; }
+.badge-up { background:var(--green-up-dim); color:var(--green-up); }
+.badge-down { background:var(--red-dim); color:var(--red); }
+.badge-stable { background:var(--gold-dim); color:var(--gold); }
+
+/* MODAL */
+.modal-overlay {
+  display:none; position:fixed; inset:0;
+  background:rgba(0,0,0,0.7); backdrop-filter:blur(8px);
+  z-index:200; align-items:center; justify-content:center; padding:20px;
+}
+.modal-overlay.active { display:flex; }
+.modal {
+  background: var(--green-dark);
+  border: 1px solid rgba(212,168,67,0.2);
+  border-radius: var(--radius); width:100%; max-width:480px;
+  padding: 28px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  animation: modalIn .3s cubic-bezier(.16,1,.3,1);
+}
+@keyframes modalIn { from{opacity:0;transform:scale(.95) translateY(10px)} to{opacity:1;transform:scale(1)} }
+.modal h2 { font-size:18px; font-weight:800; color:var(--gold); margin-bottom:4px; }
+.modal > p { font-size:12px; color:var(--text-secondary); margin-bottom:20px; }
+.form-group { margin-bottom:14px; }
+.form-group label { display:block; font-size:12px; font-weight:700; color:var(--text-secondary); margin-bottom:5px; }
+.form-group select, .form-group input {
+  width:100%; padding:10px 14px;
+  background:var(--green-deep); border:1px solid rgba(255,255,255,0.1);
+  border-radius:var(--radius-sm); color:var(--text-primary);
+  font-family:'Cairo'; font-size:13px; outline:none;
+  transition: border-color .3s;
+}
+.form-group input[type="number"] { font-family:'JetBrains Mono',monospace; direction:ltr; text-align:right; }
+.form-group select:focus, .form-group input:focus { border-color:var(--gold); }
+.form-group select option { background:var(--green-deep); }
+.form-actions { display:flex; gap:10px; margin-top:20px; }
+.btn {
+  flex:1; padding:10px; border:none; border-radius:var(--radius-sm);
+  font-family:'Cairo'; font-weight:700; font-size:13px; cursor:pointer; transition:all .3s;
+}
+.btn-primary { background:var(--gold); color:var(--green-deep); }
+.btn-primary:hover { background:var(--gold-light); }
+.btn-primary:disabled { opacity:.5; cursor:not-allowed; }
+.btn-secondary { background:rgba(255,255,255,0.06); color:var(--text-secondary); }
+.btn-secondary:hover { background:rgba(255,255,255,0.1); }
+
+/* TOAST */
+.toast {
+  position:fixed; bottom:24px; left:50%;
+  transform:translateX(-50%) translateY(100px);
+  background:var(--green-accent); color:var(--white);
+  padding:12px 24px; border-radius:12px;
+  font-weight:700; font-size:13px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  z-index:300; opacity:0;
+  transition: all .4s cubic-bezier(.16,1,.3,1);
+}
+.toast.show { transform:translateX(-50%) translateY(0); opacity:1; }
+.toast.error { background:var(--red); }
+
+/* EMPTY */
+.empty-state { text-align:center; padding:50px 20px; color:var(--text-secondary); }
+.empty-state .icon { font-size:44px; margin-bottom:14px; }
+.empty-state h3 { font-size:16px; font-weight:700; margin-bottom:6px; color:var(--text-primary); }
+.empty-state p { font-size:12px; }
+
+/* API STATUS */
+.api-status {
+  display:flex; align-items:center; gap:6px;
+  font-size:10px; color:var(--text-secondary);
+  margin-bottom:20px; padding:8px 14px;
+  background:rgba(255,255,255,0.03); border-radius:8px;
+}
+.api-dot { width:6px; height:6px; border-radius:50%; }
+.api-dot.ok { background:var(--green-up); }
+.api-dot.err { background:var(--red); }
+
+@media (max-width:768px) {
+  .header-inner { height:56px; }
+  .logo-text h1 { font-size:14px; }
+  .main { padding:14px 10px 28px; }
+  .stats-row { grid-template-columns:repeat(2,1fr); gap:8px; }
+  .stat-value { font-size:20px; }
+  .prices-grid { grid-template-columns:1fr; gap:10px; }
+  .price-main { font-size:24px; }
+  .modal { padding:20px; margin:10px; }
+  .telegram-info { flex-direction:column; text-align:center; }
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-inner">
+    <div class="logo-section">
+      <div class="logo-mark">E</div>
+      <div class="logo-text">
+        <h1>EKRAM PRICES</h1>
+        <span>متابعة أسعار الخامات لحظياً</span>
+      </div>
+    </div>
+    <div class="header-actions">
+      <div class="live-badge"><span class="live-dot"></span> مباشر</div>
+      <button class="refresh-btn" onclick="loadData()">🔄 تحديث</button>
+      <button class="btn-admin" onclick="openModal()">+ إضافة سعر</button>
+    </div>
+  </div>
+</header>
+
+<div class="main">
+  <div class="telegram-info">
+    <div class="telegram-icon">✈️</div>
+    <div class="telegram-text">
+      <h4>إدخال الأسعار عبر تليجرام</h4>
+      <p>ابعت للبوت: <code>ذرة 14500</code> أو <code>صويا 28000 مورد الدلتا</code> — هيتحدث هنا تلقائياً</p>
+    </div>
+  </div>
+
+  <div class="api-status" id="apiStatus">
+    <span class="api-dot" id="apiDot"></span>
+    <span id="apiText">جاري الاتصال...</span>
+  </div>
+
+  <div id="content">
+    <div class="loading">
+      <div class="spinner"></div>
+      <p>جاري تحميل الأسعار...</p>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <h2>تحديث سعر خامة</h2>
+    <p>السعر هيتحدث لكل الفريق فوراً</p>
+    <div class="form-group">
+      <label>الخامة</label>
+      <select id="materialSelect">
+        <option value="">اختر الخامة...</option>
+        <option value="yellow_corn">🌽 ذرة صفراء</option>
+        <option value="soybean_meal">🫘 كسب فول صويا</option>
+        <option value="wheat_bran">🌾 ردة قمح (نخالة)</option>
+        <option value="orange_peel_fresh">🍊 قشر برتقال فريش</option>
+        <option value="orange_peel_dried">🍊 قشر برتقال مجفف</option>
+        <option value="sunflower_meal">🌻 كسب عباد شمس</option>
+        <option value="hay">🌿 دريس</option>
+        <option value="straw">🌿 تبن</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>السعر (جنيه / طن)</label>
+      <input type="number" id="priceInput" placeholder="مثال: 14500">
+    </div>
+    <div class="form-group">
+      <label>اسم المورد (اختياري)</label>
+      <input type="text" id="supplierInput" placeholder="مثال: مورد الدلتا">
+    </div>
+    <div class="form-group">
+      <label>بواسطة</label>
+      <select id="userSelect">
+        <option value="محمد فؤاد">محمد فؤاد (تطوير أعمال)</option>
+        <option value="م. مروة">م. مروة (مشتريات)</option>
+      </select>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" id="submitBtn" onclick="submitPrice()">💾 حفظ السعر</button>
+      <button class="btn btn-secondary" onclick="closeModal()">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const MATERIALS = {
+  yellow_corn: { name:'ذرة صفراء', nameEn:'Yellow Corn', icon:'🌽', unit:'جنيه/طن' },
+  soybean_meal: { name:'كسب فول صويا', nameEn:'Soybean Meal', icon:'🫘', unit:'جنيه/طن' },
+  wheat_bran: { name:'ردة قمح', nameEn:'Wheat Bran', icon:'🌾', unit:'جنيه/طن' },
+  orange_peel_fresh: { name:'قشر برتقال فريش', nameEn:'Fresh Orange Peel', icon:'🍊', unit:'جنيه/طن' },
+  orange_peel_dried: { name:'قشر برتقال مجفف', nameEn:'Dried Orange Peel', icon:'🍊', unit:'جنيه/طن' },
+  sunflower_meal: { name:'كسب عباد شمس', nameEn:'Sunflower Meal', icon:'🌻', unit:'جنيه/طن' },
+  hay: { name:'دريس', nameEn:'Hay', icon:'🌿', unit:'جنيه/طن' },
+  straw: { name:'تبن', nameEn:'Straw', icon:'🌿', unit:'جنيه/طن' },
+};
+
+let priceData = {};
+let history = [];
+
+function fmt(n) { return new Intl.NumberFormat('en-US').format(n); }
+
+function timeAgo(iso) {
+  if (!iso) return '--';
+  const d = new Date(iso);
+  const diff = Math.floor((Date.now() - d) / 60000);
+  if (diff < 1) return 'الآن';
+  if (diff < 60) return `منذ ${diff} د`;
+  if (diff < 1440) return `منذ ${Math.floor(diff/60)} س`;
+  return d.toLocaleDateString('ar-EG',{day:'numeric',month:'short'});
+}
+
+function timeFull(iso) {
+  if (!iso) return '--';
+  return new Date(iso).toLocaleString('ar-EG',{hour:'2-digit',minute:'2-digit',day:'numeric',month:'short'});
+}
+
+function getChange(cur, prev) {
+  if (!prev || prev===0) return {pct:'0%', dir:'stable'};
+  const p = ((cur-prev)/prev*100).toFixed(1);
+  if (p>0) return {pct:`+${p}%`, dir:'up'};
+  if (p<0) return {pct:`${p}%`, dir:'down'};
+  return {pct:'0%', dir:'stable'};
+}
+
+// ═══ API ═══
+async function loadData() {
+  try {
+    const res = await fetch('/api/prices');
+    if (!res.ok) throw new Error(res.status);
+    const data = await res.json();
+    priceData = data.prices || {};
+    history = data.history || [];
+    setApiStatus(true);
+    render();
+  } catch(e) {
+    console.error('Load error:', e);
+    setApiStatus(false);
+    document.getElementById('content').innerHTML = `
+      <div class="empty-state">
+        <div class="icon">⚠️</div>
+        <h3>خطأ في الاتصال</h3>
+        <p>تأكد إن الموقع شغال على Netlify. لو شغال محلياً استخدم netlify dev</p>
+      </div>`;
+  }
+}
+
+async function submitPrice() {
+  const mat = document.getElementById('materialSelect').value;
+  const price = parseFloat(document.getElementById('priceInput').value);
+  const supplier = document.getElementById('supplierInput').value.trim();
+  const user = document.getElementById('userSelect').value;
+  const btn = document.getElementById('submitBtn');
+
+  if (!mat) { showToast('⚠️ اختر الخامة','error'); return; }
+  if (!price || price<=0) { showToast('⚠️ ادخل سعر صحيح','error'); return; }
+
+  btn.disabled = true;
+  btn.textContent = '⏳ جاري الحفظ...';
+
+  try {
+    const res = await fetch('/api/update-price', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ material: mat, price, supplier, user })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Failed');
+
+    await loadData();
+    closeModal();
+    showToast(`✅ تم تحديث ${data.materialName}: ${fmt(price)} جنيه/طن`);
+  } catch(e) {
+    showToast('❌ خطأ في الحفظ: ' + e.message, 'error');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '💾 حفظ السعر';
+  }
+}
+
+function setApiStatus(ok) {
+  document.getElementById('apiDot').className = `api-dot ${ok?'ok':'err'}`;
+  document.getElementById('apiText').textContent = ok
+    ? `متصل بقاعدة البيانات · آخر تحديث: ${new Date().toLocaleTimeString('ar-EG')}`
+    : 'غير متصل بقاعدة البيانات';
+}
+
+// ═══ RENDER ═══
+function render() {
+  const keys = Object.keys(priceData);
+  let ups=0, downs=0, stables=0;
+  let lastUpdate = '';
+
+  keys.forEach(k => {
+    const d = priceData[k];
+    const c = getChange(d.price, d.prevPrice);
+    if (c.dir==='up') ups++; else if (c.dir==='down') downs++; else stables++;
+    if (!lastUpdate || d.updatedAt > lastUpdate) lastUpdate = d.updatedAt;
+  });
+
+  let html = `
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-label">إجمالي الخامات</div>
+        <div class="stat-value gold">${keys.length}</div>
+        <div class="stat-sub">خامة مُتابعة</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">ارتفعت ↑</div>
+        <div class="stat-value red">${ups}</div>
+        <div class="stat-sub">خامة</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">انخفضت ↓</div>
+        <div class="stat-value green">${downs}</div>
+        <div class="stat-sub">خامة</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">آخر تحديث</div>
+        <div class="stat-value gold" style="font-size:16px">${timeAgo(lastUpdate)}</div>
+        <div class="stat-sub">${timeFull(lastUpdate)}</div>
+      </div>
+    </div>
+
+    <div class="section-title">أسعار الخامات الحالية</div>
+    <div class="prices-grid">`;
+
+  if (keys.length === 0) {
+    html += `<div class="empty-state" style="grid-column:1/-1">
+      <div class="icon">📦</div>
+      <h3>لا توجد أسعار بعد</h3>
+      <p>اضغط "إضافة سعر" أو ابعت من بوت التليجرام</p>
+    </div>`;
+  } else {
+    keys.forEach(key => {
+      const mat = MATERIALS[key] || {name:key, nameEn:key, icon:'📦', unit:'جنيه/طن'};
+      const d = priceData[key];
+      const ch = getChange(d.price, d.prevPrice);
+      const arrows = {up:'▲', down:'▼', stable:'■'};
+      html += `
+        <div class="price-card ${ch.dir}">
+          <div class="card-header">
+            <div style="display:flex;align-items:center;gap:10px">
+              <div class="material-icon">${mat.icon}</div>
+              <div class="material-info">
+                <h3>${mat.name}</h3>
+                <span class="en-name">${mat.nameEn}</span>
+              </div>
+            </div>
+            <span class="price-change ${ch.dir}">${arrows[ch.dir]} ${ch.pct}</span>
+          </div>
+          <div class="price-display">
+            <span class="price-main">${fmt(d.price)}</span>
+            <span class="price-unit">${mat.unit}</span>
+          </div>
+          ${d.prevPrice && d.prevPrice !== d.price ? `<div class="prev-price">السابق: <span>${fmt(d.prevPrice)}</span></div>` : ''}
+          <div class="card-footer">
+            <div class="supplier-info">المورد: <strong>${d.supplier||'---'}</strong> · <strong>${d.updatedBy}</strong></div>
+            <div class="update-time">${timeAgo(d.updatedAt)}</div>
+          </div>
+        </div>`;
+    });
+  }
+
+  html += `</div>
+    <div class="section-title">سجل التحديثات</div>
+    <div class="history-section"><table class="history-table"><thead><tr>
+      <th>الخامة</th><th>السعر</th><th>التغيير</th><th>المورد</th><th>بواسطة</th><th>الوقت</th>
+    </tr></thead><tbody>`;
+
+  if (history.length === 0) {
+    html += `</tbody></table>
+      <div class="empty-state"><div class="icon">📋</div><h3>لا توجد تحديثات</h3></div></div>`;
+  } else {
+    const arrows = {up:'▲', down:'▼', stable:'■'};
+    history.slice(0,25).forEach(h => {
+      html += `<tr>
+        <td><strong>${h.materialName}</strong></td>
+        <td class="mono">${fmt(h.price)}</td>
+        <td><span class="badge badge-${h.dir}">${arrows[h.dir]} ${h.changePct}</span></td>
+        <td>${h.supplier||'---'}</td>
+        <td>${h.updatedBy}</td>
+        <td class="mono" style="font-size:10px">${timeFull(h.time)}</td>
+      </tr>`;
+    });
+    html += `</tbody></table></div>`;
+  }
+
+  document.getElementById('content').innerHTML = html;
+}
+
+// ═══ UI ═══
+function openModal() { document.getElementById('modalOverlay').classList.add('active'); }
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('active');
+  document.getElementById('materialSelect').value='';
+  document.getElementById('priceInput').value='';
+  document.getElementById('supplierInput').value='';
+}
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `toast show ${type==='error'?'error':''}`;
+  setTimeout(()=> t.className='toast', 3000);
+}
+
+document.getElementById('modalOverlay').addEventListener('click', function(e) { if(e.target===this) closeModal(); });
+document.addEventListener('keydown', e => {
+  if (e.key==='Escape') closeModal();
+  if (e.key==='n' && e.ctrlKey) { e.preventDefault(); openModal(); }
+});
+
+// ═══ INIT ═══
+loadData();
+// Auto-refresh every 30 seconds
+setInterval(loadData, 30000);
+</script>
+</body>
+</html>
