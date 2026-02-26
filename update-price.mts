@@ -1,13 +1,7 @@
 import { getStore } from "@netlify/blobs";
 import type { Context, Config } from "@netlify/functions";
 
-const VALID_MATERIALS = [
-  "yellow_corn", "soybean_meal", "wheat_bran",
-  "orange_peel_fresh", "orange_peel_dried",
-  "sunflower_meal", "hay", "straw"
-];
-
-const MATERIAL_NAMES: Record<string, string> = {
+const DEFAULT_MATERIALS: Record<string, string> = {
   yellow_corn: "ذرة صفراء",
   soybean_meal: "كسب فول صويا",
   wheat_bran: "ردة قمح",
@@ -18,7 +12,6 @@ const MATERIAL_NAMES: Record<string, string> = {
   straw: "تبن"
 };
 
-// Alias mapping for Telegram bot messages (parsed by Make.com/OpenAI)
 const CODE_ALIASES: Record<string, string> = {
   corn: "yellow_corn",
   soya: "soybean_meal",
@@ -38,7 +31,6 @@ export default async (req: Request, context: Context) => {
     });
   }
 
-  // Optional: simple API key auth for the Telegram webhook
   const apiKey = Netlify.env.get("EKRAM_API_KEY");
   const authHeader = req.headers.get("x-api-key");
   if (apiKey && authHeader && authHeader !== apiKey) {
@@ -52,13 +44,12 @@ export default async (req: Request, context: Context) => {
     const body = await req.json();
     let { material, price, supplier, user } = body;
 
-    // Resolve alias codes from Telegram bot
     if (material && CODE_ALIASES[material]) {
       material = CODE_ALIASES[material];
     }
 
-    if (!material || !VALID_MATERIALS.includes(material)) {
-      return new Response(JSON.stringify({ error: "Invalid material", valid: VALID_MATERIALS }), {
+    if (!material) {
+      return new Response(JSON.stringify({ error: "Material is required" }), {
         status: 400,
         headers: { "Content-Type": "application/json" }
       });
@@ -73,7 +64,22 @@ export default async (req: Request, context: Context) => {
 
     const store = getStore({ name: "ekram-prices", consistency: "strong" });
 
-    // Get current prices
+    // Load custom materials to validate
+    const customMaterials = (await store.get("custom-materials", { type: "json" })) || {};
+    const allValidMaterials = { ...DEFAULT_MATERIALS };
+
+    // Add custom material names
+    for (const [key, val] of Object.entries(customMaterials)) {
+      allValidMaterials[key] = (val as any).name || key;
+    }
+
+    if (!allValidMaterials[material]) {
+      return new Response(JSON.stringify({ error: "Unknown material", valid: Object.keys(allValidMaterials) }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" }
+      });
+    }
+
     const currentPrices = (await store.get("current-prices", { type: "json" })) || {};
     const currentHistory = (await store.get("price-history", { type: "json" })) || [];
 
@@ -86,7 +92,6 @@ export default async (req: Request, context: Context) => {
 
     const now = new Date().toISOString();
 
-    // Update current price
     currentPrices[material] = {
       price: newPrice,
       prevPrice,
@@ -95,10 +100,11 @@ export default async (req: Request, context: Context) => {
       updatedAt: now
     };
 
-    // Add to history (keep last 100)
+    const materialName = allValidMaterials[material] || material;
+
     currentHistory.unshift({
       materialKey: material,
-      materialName: MATERIAL_NAMES[material] || material,
+      materialName,
       price: newPrice,
       prevPrice,
       changePct: `${dir === "up" ? "+" : ""}${changePct}%`,
@@ -112,14 +118,13 @@ export default async (req: Request, context: Context) => {
       currentHistory.length = 100;
     }
 
-    // Save both
     await store.setJSON("current-prices", currentPrices);
     await store.setJSON("price-history", currentHistory);
 
     return new Response(JSON.stringify({
       success: true,
       material,
-      materialName: MATERIAL_NAMES[material],
+      materialName,
       price: newPrice,
       prevPrice,
       change: `${changePct}%`,

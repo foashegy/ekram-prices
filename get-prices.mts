@@ -7,15 +7,17 @@ export default async (req: Request, context: Context) => {
   try {
     const prices = await store.get("current-prices", { type: "json" });
     const history = await store.get("price-history", { type: "json" });
+    const customMaterials = await store.get("custom-materials", { type: "json" });
 
     return new Response(JSON.stringify({
       prices: prices || {},
-      history: history || []
+      history: history || [],
+      customMaterials: customMaterials || {}
     }), {
       headers: { "Content-Type": "application/json" }
     });
   } catch (err) {
-    return new Response(JSON.stringify({ prices: {}, history: [] }), {
+    return new Response(JSON.stringify({ prices: {}, history: [], customMaterials: {} }), {
       headers: { "Content-Type": "application/json" }
     });
   }

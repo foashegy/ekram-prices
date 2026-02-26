@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EKRAM Price Tracker | متابعة أسعار الإكرام</title>
+<title>El-Ekram | متابعة أسعار الإكرام</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌽</text></svg>">
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
@@ -62,13 +62,10 @@ body::before {
   height: 68px;
 }
 .logo-section { display: flex; align-items: center; gap: 12px; }
-.logo-mark {
-  width: 42px; height: 42px;
-  background: linear-gradient(135deg, var(--gold), var(--gold-light));
-  border-radius: 11px;
-  display: flex; align-items: center; justify-content: center;
-  font-weight: 900; font-size: 17px; color: var(--green-deep);
-  box-shadow: 0 2px 12px rgba(212,168,67,0.3);
+.logo-img {
+  width: 44px; height: 44px;
+  border-radius: 10px;
+  object-fit: contain;
 }
 .logo-text h1 { font-size: 17px; font-weight: 800; color: var(--gold); letter-spacing: 1px; }
 .logo-text span { font-size: 11px; color: var(--text-secondary); }
@@ -300,6 +297,14 @@ body::before {
 .toast.show { transform:translateX(-50%) translateY(0); opacity:1; }
 .toast.error { background:var(--red); }
 
+/* EMOJI PICKER */
+.emoji-btn {
+  width:36px; height:36px; border:1px solid rgba(255,255,255,0.1);
+  border-radius:8px; background:var(--green-deep); font-size:18px;
+  cursor:pointer; transition:all .2s; display:flex; align-items:center; justify-content:center;
+}
+.emoji-btn:hover { border-color:var(--gold); transform:scale(1.15); }
+
 /* EMPTY */
 .empty-state { text-align:center; padding:50px 20px; color:var(--text-secondary); }
 .empty-state .icon { font-size:44px; margin-bottom:14px; }
@@ -335,15 +340,16 @@ body::before {
 <header class="header">
   <div class="header-inner">
     <div class="logo-section">
-      <div class="logo-mark">E</div>
+      <img src="data:image/png;base64,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" alt="El-Ekram" class="logo-img">
       <div class="logo-text">
-        <h1>EKRAM PRICES</h1>
+        <h1>El-Ekram الإكرام</h1>
         <span>متابعة أسعار الخامات لحظياً</span>
       </div>
     </div>
     <div class="header-actions">
       <div class="live-badge"><span class="live-dot"></span> مباشر</div>
       <button class="refresh-btn" onclick="loadData()">🔄 تحديث</button>
+      <button class="refresh-btn" onclick="openMaterialModal()" style="color:var(--gold);border:1px solid rgba(212,168,67,0.3)">+ خامة جديدة</button>
       <button class="btn-admin" onclick="openModal()">+ إضافة سعر</button>
     </div>
   </div>
@@ -414,6 +420,54 @@ body::before {
 
 <div class="toast" id="toast"></div>
 
+<!-- ADD MATERIAL MODAL -->
+<div class="modal-overlay" id="materialModalOverlay">
+  <div class="modal">
+    <h2>➕ إضافة خامة جديدة</h2>
+    <p>أضف خامة مش موجودة في القايمة الأساسية</p>
+    <div class="form-group">
+      <label>اسم الخامة بالعربي *</label>
+      <input type="text" id="matNameAr" placeholder="مثال: ذرة رفيعة">
+    </div>
+    <div class="form-group">
+      <label>اسم الخامة بالإنجليزي</label>
+      <input type="text" id="matNameEn" placeholder="مثال: Sorghum" style="direction:ltr;text-align:left">
+    </div>
+    <div class="form-group">
+      <label>الأيقونة (إيموجي)</label>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">
+        <button type="button" class="emoji-btn" onclick="pickEmoji('🌾')">🌾</button>
+        <button type="button" class="emoji-btn" onclick="pickEmoji('🌽')">🌽</button>
+        <button type="button" class="emoji-btn" onclick="pickEmoji('🫘')">🫘</button>
+        <button type="button" class="emoji-btn" onclick="pickEmoji('🌻')">🌻</button>
+        <button type="button" class="emoji-btn" onclick="pickEmoji('🍊')">🍊</button>
+        <button type="button" class="emoji-btn" onclick="pickEmoji('🌿')">🌿</button>
+        <button type="button" class="emoji-btn" onclick="pickEmoji('🥜')">🥜</button>
+        <button type="button" class="emoji-btn" onclick="pickEmoji('🧪')">🧪</button>
+        <button type="button" class="emoji-btn" onclick="pickEmoji('📦')">📦</button>
+        <button type="button" class="emoji-btn" onclick="pickEmoji('🐄')">🐄</button>
+        <button type="button" class="emoji-btn" onclick="pickEmoji('💊')">💊</button>
+        <button type="button" class="emoji-btn" onclick="pickEmoji('🧂')">🧂</button>
+      </div>
+      <input type="text" id="matIcon" placeholder="📦" value="📦" style="width:60px;text-align:center;font-size:22px">
+    </div>
+    <div class="form-group">
+      <label>وحدة السعر</label>
+      <select id="matUnit">
+        <option value="جنيه/طن">جنيه / طن</option>
+        <option value="جنيه/كيلو">جنيه / كيلو</option>
+        <option value="جنيه/بالة">جنيه / بالة</option>
+        <option value="جنيه/شيكارة">جنيه / شيكارة</option>
+        <option value="جنيه/متر مكعب">جنيه / متر مكعب</option>
+      </select>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" id="addMatBtn" onclick="submitMaterial()">➕ إضافة الخامة</button>
+      <button class="btn btn-secondary" onclick="closeMaterialModal()">إلغاء</button>
+    </div>
+  </div>
+</div>
+
 <script>
 const MATERIALS = {
   yellow_corn: { name:'ذرة صفراء', nameEn:'Yellow Corn', icon:'🌽', unit:'جنيه/طن' },
@@ -428,6 +482,7 @@ const MATERIALS = {
 
 let priceData = {};
 let history = [];
+let customMaterials = {};
 
 function fmt(n) { return new Intl.NumberFormat('en-US').format(n); }
 
@@ -462,6 +517,17 @@ async function loadData() {
     const data = await res.json();
     priceData = data.prices || {};
     history = data.history || [];
+    customMaterials = data.customMaterials || {};
+
+    // Merge custom materials into MATERIALS
+    for (const [key, val] of Object.entries(customMaterials)) {
+      if (!MATERIALS[key]) {
+        MATERIALS[key] = { name: val.name, nameEn: val.nameEn || key, icon: val.icon || '📦', unit: val.unit || 'جنيه/طن' };
+      }
+    }
+
+    // Rebuild material select options
+    rebuildMaterialSelect();
     setApiStatus(true);
     render();
   } catch(e) {
@@ -474,6 +540,19 @@ async function loadData() {
         <p>تأكد إن الموقع شغال على Netlify. لو شغال محلياً استخدم netlify dev</p>
       </div>`;
   }
+}
+
+function rebuildMaterialSelect() {
+  const sel = document.getElementById('materialSelect');
+  const currentVal = sel.value;
+  sel.innerHTML = '<option value="">اختر الخامة...</option>';
+  for (const [key, mat] of Object.entries(MATERIALS)) {
+    const opt = document.createElement('option');
+    opt.value = key;
+    opt.textContent = `${mat.icon} ${mat.name}`;
+    sel.appendChild(opt);
+  }
+  if (currentVal) sel.value = currentVal;
 }
 
 async function submitPrice() {
@@ -628,6 +707,59 @@ function closeModal() {
   document.getElementById('priceInput').value='';
   document.getElementById('supplierInput').value='';
 }
+
+function openMaterialModal() { document.getElementById('materialModalOverlay').classList.add('active'); }
+function closeMaterialModal() {
+  document.getElementById('materialModalOverlay').classList.remove('active');
+  document.getElementById('matNameAr').value='';
+  document.getElementById('matNameEn').value='';
+  document.getElementById('matIcon').value='📦';
+}
+
+function pickEmoji(e) { document.getElementById('matIcon').value = e; }
+
+async function submitMaterial() {
+  const nameAr = document.getElementById('matNameAr').value.trim();
+  const nameEn = document.getElementById('matNameEn').value.trim();
+  const icon = document.getElementById('matIcon').value.trim() || '📦';
+  const unit = document.getElementById('matUnit').value;
+  const btn = document.getElementById('addMatBtn');
+
+  if (!nameAr) { showToast('⚠️ ادخل اسم الخامة بالعربي','error'); return; }
+
+  // Generate key from Arabic name
+  const key = nameAr.replace(/\s+/g, '_').replace(/[^\u0600-\u06FFa-zA-Z0-9_]/g, '');
+  const safeKey = nameEn ? nameEn.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '') : 'custom_' + Date.now();
+
+  btn.disabled = true;
+  btn.textContent = '⏳ جاري الإضافة...';
+
+  try {
+    const res = await fetch('/api/add-material', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ key: safeKey, nameAr, nameEn: nameEn || safeKey, icon, unit })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Failed');
+
+    await loadData();
+    closeMaterialModal();
+    showToast(`✅ تمت إضافة خامة "${nameAr}" بنجاح!`);
+
+    // Open price modal with the new material selected
+    setTimeout(() => {
+      openModal();
+      document.getElementById('materialSelect').value = safeKey;
+    }, 500);
+
+  } catch(e) {
+    showToast('❌ خطأ: ' + e.message, 'error');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '➕ إضافة الخامة';
+  }
+}
 function showToast(msg, type) {
   const t = document.getElementById('toast');
   t.textContent = msg;
@@ -636,8 +768,9 @@ function showToast(msg, type) {
 }
 
 document.getElementById('modalOverlay').addEventListener('click', function(e) { if(e.target===this) closeModal(); });
+document.getElementById('materialModalOverlay').addEventListener('click', function(e) { if(e.target===this) closeMaterialModal(); });
 document.addEventListener('keydown', e => {
-  if (e.key==='Escape') closeModal();
+  if (e.key==='Escape') { closeModal(); closeMaterialModal(); }
   if (e.key==='n' && e.ctrlKey) { e.preventDefault(); openModal(); }
 });
 
