@@ -1,6 +1,6 @@
 [build]
   command = "echo 'No build needed'"
-  publish = "public"
+  publish = "."
   functions = "netlify/functions"
 
 [functions]
