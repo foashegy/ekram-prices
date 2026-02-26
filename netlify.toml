@@ -1,6 +1,7 @@
 [build]
-  publish = "public"
-  functions = "netlify/functions"
+  command = "mkdir -p _site && cp index.html _site/ && mkdir -p _functions && cp get-prices.mts _functions/ && cp update-price.mts _functions/"
+  publish = "_site"
+  functions = "_functions"
 
 [functions]
   node_bundler = "esbuild"
