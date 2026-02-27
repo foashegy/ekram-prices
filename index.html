@@ -762,7 +762,18 @@ function render() {
 }
 
 // ═══ UI ═══
-function openModal() { document.getElementById('modalOverlay').classList.add('active'); }
+let isAuthenticated = false;
+function openModal() {
+  if (!isAuthenticated) {
+    const pass = prompt('🔒 ادخل كلمة المرور:');
+    if (pass !== '2355') {
+      showToast('❌ كلمة المرور غلط', true);
+      return;
+    }
+    isAuthenticated = true;
+  }
+  document.getElementById('modalOverlay').classList.add('active');
+}
 function closeModal() {
   document.getElementById('modalOverlay').classList.remove('active');
   document.getElementById('materialSelect').value='';
@@ -770,7 +781,17 @@ function closeModal() {
   document.getElementById('supplierInput').value='';
 }
 
-function openMaterialModal() { document.getElementById('materialModalOverlay').classList.add('active'); }
+function openMaterialModal() {
+  if (!isAuthenticated) {
+    const pass = prompt('🔒 ادخل كلمة المرور:');
+    if (pass !== '2355') {
+      showToast('❌ كلمة المرور غلط', true);
+      return;
+    }
+    isAuthenticated = true;
+  }
+  document.getElementById('materialModalOverlay').classList.add('active');
+}
 function closeMaterialModal() {
   document.getElementById('materialModalOverlay').classList.remove('active');
   document.getElementById('matNameAr').value='';
