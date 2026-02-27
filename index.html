@@ -112,26 +112,6 @@ body::before {
 }
 @keyframes spin { to{transform:rotate(360deg)} }
 
-/* TELEGRAM INFO */
-.telegram-info {
-  background: linear-gradient(135deg, #0088cc12, #0088cc06);
-  border: 1px solid rgba(0,136,204,0.15);
-  border-radius: var(--radius); padding: 16px 20px;
-  margin-bottom: 24px;
-  display: flex; align-items: center; gap: 14px;
-}
-.telegram-icon {
-  width:44px; height:44px; background:#0088cc; border-radius:12px;
-  display:flex; align-items:center; justify-content:center;
-  font-size:22px; flex-shrink:0;
-}
-.telegram-text h4 { font-size:13px; font-weight:700; margin-bottom:2px; }
-.telegram-text p { font-size:11px; color:var(--text-secondary); line-height:1.6; }
-.telegram-text code {
-  background:rgba(0,136,204,0.15); padding:2px 5px; border-radius:4px;
-  font-family:'JetBrains Mono',monospace; font-size:10px; direction:ltr; color:#4FC3F7;
-}
-
 /* STATS */
 .stats-row {
   display: grid;
@@ -331,7 +311,6 @@ body::before {
   .prices-grid { grid-template-columns:1fr; gap:10px; }
   .price-main { font-size:24px; }
   .modal { padding:20px; margin:10px; }
-  .telegram-info { flex-direction:column; text-align:center; }
 }
 </style>
 </head>
@@ -356,13 +335,7 @@ body::before {
 </header>
 
 <div class="main">
-  <div class="telegram-info">
-    <div class="telegram-icon">✈️</div>
-    <div class="telegram-text">
-      <h4>إدخال الأسعار عبر تليجرام</h4>
-      <p>ابعت للبوت: <code>ذرة 14500</code> أو <code>صويا 28000 مورد الدلتا</code> — هيتحدث هنا تلقائياً</p>
-    </div>
-  </div>
+
 
   <div class="api-status" id="apiStatus">
     <span class="api-dot" id="apiDot"></span>
@@ -407,6 +380,7 @@ body::before {
     <div class="form-group">
       <label>بواسطة</label>
       <select id="userSelect">
+        <option value="م. محمد محمود">م. محمد محمود (CEO)</option>
         <option value="محمد فؤاد">محمد فؤاد (تطوير أعمال)</option>
         <option value="م. مروة">م. مروة (مشتريات)</option>
       </select>
@@ -639,7 +613,7 @@ function render() {
     html += `<div class="empty-state" style="grid-column:1/-1">
       <div class="icon">📦</div>
       <h3>لا توجد أسعار بعد</h3>
-      <p>اضغط "إضافة سعر" أو ابعت من بوت التليجرام</p>
+      <p>اضغط "إضافة سعر" لإدخال أول سعر</p>
     </div>`;
   } else {
     keys.forEach(key => {
