@@ -83,9 +83,11 @@ body::before {
 @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.4;transform:scale(.7)} }
 .btn-admin {
   background: var(--gold); color: var(--green-deep); border: none;
-  padding: 7px 16px; border-radius: 10px;
+  padding: 8px 16px; border-radius: 10px;
   font-family:'Cairo'; font-weight:700; font-size:13px;
   cursor:pointer; transition: all .3s;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 .btn-admin:hover { background: var(--gold-light); transform: translateY(-1px); }
 .refresh-btn {
@@ -202,6 +204,7 @@ body::before {
   border: 1px solid rgba(255,255,255,0.06);
   border-radius: var(--radius); padding: 20px;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 .history-table { width:100%; border-collapse:collapse; font-size:12px; }
 .history-table th {
@@ -302,15 +305,101 @@ body::before {
 .api-dot.ok { background:var(--green-up); }
 .api-dot.err { background:var(--red); }
 
+/* TABLET */
 @media (max-width:768px) {
+  .header { padding: 0 14px; }
   .header-inner { height:56px; }
   .logo-text h1 { font-size:14px; }
-  .main { padding:14px 10px 28px; }
+  .logo-text span { font-size:9px; }
+  .logo-img { width:36px; height:36px; border-radius:8px; }
+  .logo-section { gap:8px; }
+  .main { padding:14px 12px 28px; }
   .stats-row { grid-template-columns:repeat(2,1fr); gap:8px; }
+  .stat-card { padding:14px; }
   .stat-value { font-size:20px; }
+  .stat-label { font-size:10px; }
   .prices-grid { grid-template-columns:1fr; gap:10px; }
   .price-main { font-size:24px; }
   .modal { padding:20px; margin:10px; }
+  .section-title { font-size:15px; }
+  .history-section { padding:14px; }
+  .history-table th, .history-table td { padding:8px 10px; font-size:11px; }
+}
+
+/* MOBILE SMALL */
+@media (max-width:480px) {
+  body { font-size:13px; }
+  .header { padding: 0 10px; position:sticky; top:0; z-index:100; }
+  .header-inner { height:50px; }
+  .logo-img { width:32px; height:32px; }
+  .logo-text h1 { font-size:12px; letter-spacing:0.5px; }
+  .logo-text span { display:none; }
+  .logo-section { gap:6px; }
+  .header-actions { gap:6px; }
+  .live-badge { padding:4px 8px; font-size:10px; }
+  .live-badge span:last-child { display:none; }
+  .btn-admin { padding:6px 12px; font-size:11px; }
+  .refresh-btn { padding:5px 8px; font-size:11px; }
+  .main { padding:12px 10px 24px; }
+
+  /* Stats */
+  .stats-row { grid-template-columns:repeat(2,1fr); gap:6px; }
+  .stat-card { padding:12px; border-radius:12px; }
+  .stat-value { font-size:18px; }
+  .stat-label { font-size:9px; margin-bottom:4px; }
+  .stat-sub { font-size:9px; }
+
+  /* Price Cards */
+  .prices-grid { grid-template-columns:1fr; gap:8px; }
+  .price-card { padding:16px; border-radius:14px; }
+  .card-header { margin-bottom:10px; }
+  .material-icon { width:38px; height:38px; font-size:18px; border-radius:10px; }
+  .material-info h3 { font-size:13px; }
+  .material-info .en-name { font-size:9px; }
+  .price-main { font-size:22px; }
+  .price-unit { font-size:10px; }
+  .price-change { font-size:10px; padding:2px 6px; }
+  .card-footer { margin-top:10px; padding-top:8px; }
+  .supplier-info { font-size:9px; }
+  .update-time { font-size:8px; }
+  .prev-price { font-size:10px; }
+  .section-title { font-size:14px; margin-bottom:12px; }
+  .section-title::before { height:18px; }
+
+  /* History Table */
+  .history-section { padding:10px; border-radius:12px; }
+  .history-table { font-size:10px; }
+  .history-table th { padding:6px 8px; font-size:9px; }
+  .history-table td { padding:6px 8px; font-size:10px; }
+
+  /* Modal */
+  .modal-overlay { padding:8px; align-items:flex-end; }
+  .modal {
+    padding:20px 16px; margin:0;
+    max-width:100%; border-radius:20px 20px 0 0;
+    max-height:90vh; overflow-y:auto;
+  }
+  .modal h2 { font-size:16px; }
+  .modal > p { font-size:11px; }
+  .form-group label { font-size:11px; }
+  .form-group select, .form-group input { padding:10px 12px; font-size:12px; border-radius:10px; }
+  .form-actions { gap:8px; margin-top:16px; }
+  .btn { padding:12px; font-size:12px; border-radius:10px; }
+
+  /* API Status */
+  .api-status { font-size:9px; padding:6px 10px; margin-bottom:14px; }
+
+  /* Empty State */
+  .empty-state { padding:30px 16px; }
+  .empty-state .icon { font-size:36px; }
+  .empty-state h3 { font-size:14px; }
+  .empty-state p { font-size:11px; }
+
+  /* Toast */
+  .toast { font-size:12px; padding:10px 18px; bottom:16px; border-radius:10px; }
+
+  /* Emoji picker */
+  .emoji-btn { width:32px; height:32px; font-size:16px; }
 }
 </style>
 </head>
