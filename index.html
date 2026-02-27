@@ -727,7 +727,7 @@ function render() {
           </div>
           ${d.prevPrice && d.prevPrice !== d.price ? `<div class="prev-price">السابق: <span>${fmt(d.prevPrice)}</span></div>` : ''}
           <div class="card-footer">
-            <div class="supplier-info">المورد: <strong>${d.supplier||'---'}</strong> · <strong>${d.updatedBy}</strong></div>
+            <div class="supplier-info">ملاحظات: <strong>${d.supplier||'---'}</strong> · <strong>${d.updatedBy}</strong></div>
             <div class="update-time">${timeAgo(d.updatedAt)}</div>
           </div>
         </div>`;
@@ -737,7 +737,7 @@ function render() {
   html += `</div>
     <div class="section-title">سجل التحديثات</div>
     <div class="history-section"><table class="history-table"><thead><tr>
-      <th>الخامة</th><th>السعر</th><th>التغيير</th><th>المورد</th><th>بواسطة</th><th>الوقت</th>
+      <th>الخامة</th><th>السعر</th><th>التغيير</th><th>ملاحظات</th><th>بواسطة</th><th>الوقت</th>
     </tr></thead><tbody>`;
 
   if (history.length === 0) {
