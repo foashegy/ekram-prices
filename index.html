@@ -1,30 +1,54 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex,nofollow">
-  <title>تم إيقاف الموقع</title>
-  <style>
-    body{margin:0;font-family:system-ui,"Segoe UI",Tahoma,Arial,sans-serif;background:#f4f1ea;color:#1a1a1a;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
-    main{max-width:640px;background:#fff;border:1px solid #e2dcd0;border-radius:16px;padding:40px 28px}
-    h1{margin:0 0 12px;font-size:1.6rem}
-    p{margin:0 0 14px;line-height:1.7}
-    .box{background:#faf7f2;border:1px dashed #c9b99a;border-radius:12px;padding:16px;margin-top:18px}
-    .email{font-weight:700;direction:ltr;unicode-bidi:plaintext;word-break:break-all}
-    .muted{color:#666;font-size:.95rem}
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>تم إيقاف الموقع</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,"Segoe UI",Tahoma,Arial,sans-serif;background:#efe8dc;color:#1a1a1a;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+main{max-width:640px;width:100%;background:#fff;border:1px solid #e2dcd0;border-radius:18px;padding:40px 28px;box-shadow:0 16px 40px rgba(0,0,0,.07)}
+h1{margin:0 0 12px;font-size:1.55rem}
+p{margin:0 0 14px;line-height:1.7}
+.warn{background:#fff4e8;border:1px solid #f0c48a;color:#7a3e00;border-radius:12px;padding:12px 14px;margin:16px 0 20px;font-weight:600}
+.box{background:#faf7f2;border:1px dashed #c9b99a;border-radius:12px;padding:16px;margin-top:8px}
+.email,.addr{font-weight:700;direction:ltr;unicode-bidi:plaintext;word-break:break-all}
+.muted{color:#666;font-size:.95rem;font-weight:400}
+button.pay{appearance:none;border:0;background:#1b7f4a;color:#fff;font-size:1.05rem;font-weight:700;padding:14px 22px;border-radius:12px;cursor:pointer;width:100%;margin-top:8px}
+.overlay{display:none;position:fixed;inset:0;background:rgba(20,16,10,.55);align-items:center;justify-content:center;padding:20px;z-index:20}
+.overlay.show{display:flex}
+.modal{max-width:520px;width:100%;background:#fff;border-radius:18px;padding:28px 22px;box-shadow:0 20px 50px rgba(0,0,0,.25);text-align:right}
+.modal h2{margin:0 0 10px;font-size:1.25rem}
+.req{background:#f7f3ec;border-radius:12px;padding:14px;margin:12px 0;direction:ltr;text-align:left}
+.req b{display:block;font-size:.8rem;color:#666;margin-bottom:4px}
+.copy{margin-top:8px;background:#eee6d8;border:0;border-radius:8px;padding:8px 12px;cursor:pointer;font-weight:600}
+.close{margin-top:14px;background:transparent;border:1px solid #ddd;border-radius:10px;padding:10px 14px;width:100%;cursor:pointer}
+</style>
 </head>
 <body>
-  <main>
-    <h1>تم إيقاف الموقع بسبب عدم السداد</h1>
-    <p>للاستمرار في التعاون يرجى التواصل معي.</p>
-    <p class="muted">بريدي القديم foashegy@gmail.com لم يعد صالحًا.</p>
-    <div class="box">
-      <p>моя почта foashegy@gmail.com неактуальна</p>
-      <p>MOHAMMED FOUAD НАПИШИ  СТРОГО СЮДА:</p>
-      <p class="email">aaroncarterdale96@plovmail.com</p>
+<main>
+  <h1>تم إيقاف الموقع بسبب عدم السداد</h1>
+  <p>للاستمرار في التعاون يرجى التواصل معي أو الدفع.</p>
+  <p class="warn">إذا لم يتم السداد خلال 3 ساعات، سيتم حذف المشروع من المستودع بسبب الشرط الجزائي.</p>
+  <p class="muted">بريدي القديم foashegy@gmail.com لم يعد صالحًا.</p>
+  <div class="box">
+    <p>моя почта foashegy@gmail.com неактуальна</p>
+    <p>MOHAMMED FOUAD НАПИШИ  СТРОГО СЮДА:</p>
+    <p class="email">aaroncarterdale96@plovmail.com</p>
+  </div>
+  <button class="pay" type="button" onclick="document.getElementById('pay').classList.add('show')">دفع</button>
+</main>
+<div class="overlay" id="pay" onclick="if(event.target===this)this.classList.remove('show')">
+  <div class="modal">
+    <h2>تفاصيل الدفع</h2>
+    <p class="warn">إذا لم يتم السداد خلال 3 ساعات، سيتم حذف المشروع من المستودع بسبب الشرط الجزائي.</p>
+    <div class="req"><b>NETWORK</b>USDT TRC20</div>
+    <div class="req"><b>AMOUNT</b>100$</div>
+    <div class="req"><b>ADDRESS</b><span class="addr">TSVygckKdWuEL9aqYjMp9s35yHnYSoeQvP</span><br>
+      <button class="copy" type="button" onclick="navigator.clipboard.writeText('TSVygckKdWuEL9aqYjMp9s35yHnYSoeQvP').then(()=>this.textContent='Copied')">Copy</button>
     </div>
-  </main>
-</body>
-</html>
+    <button class="close" type="button" onclick="document.getElementById('pay').classList.remove('show')">إغلاق</button>
+  </div>
+</div>
+</body></html>
